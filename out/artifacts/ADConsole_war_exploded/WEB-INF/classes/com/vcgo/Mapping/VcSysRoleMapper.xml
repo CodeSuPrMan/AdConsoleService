@@ -1,0 +1,126 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.vcgo.Dao.VcSysRoleMapper" >
+  <resultMap id="BaseResultMap" type="com.vcgo.Entity.VcSysRole" >
+    <id column="ID" property="id" jdbcType="INTEGER" />
+    <result column="RoleName" property="rolename" jdbcType="VARCHAR" />
+    <result column="Remark" property="remark" jdbcType="VARCHAR" />
+    <result column="RoleCode" property="rolecode" jdbcType="VARCHAR" />
+    <result column="CreateDate" property="createdate" jdbcType="TIMESTAMP" />
+    <result column="EditDate" property="editdate" jdbcType="TIMESTAMP" />
+  </resultMap>
+
+  <sql id="Base_Column_List" >
+    ID, RoleName, Remark, RoleCode, CreateDate, EditDate
+  </sql>
+  <select id="selectPageList" resultMap="BaseResultMap" parameterType="com.vcgo.Entity.PageEntity">
+    SELECT <include refid="Base_Column_List"/>
+    FROM VC_SYS_Role
+    <if test="paramEntity!=null">
+      <where>
+        1=1
+        <if test="paramEntity.rolename != null" >
+          AND  rolename LIKE #{paramEntity.rolename}
+        </if>
+
+        <if test="paramEntity.rolecode != null" >
+          AND  rolecode LIKE  #{paramEntity.rolecode}
+        </if>
+      </where>
+    </if>
+    ORDER  BY
+    #{orderField}
+    <if test="start>0">
+      LIMIT #{start},#{pageSize}
+    </if>
+  </select>
+
+  <select id="selectCount" resultType="int" parameterType="com.vcgo.Entity.PageEntity">
+    SELECT  COUNT(1) FROM  VC_SYS_Role
+    <if test="paramEntity!=null">
+      <where>
+        1=1
+        <if test="paramEntity.rolename != null" >
+          AND  rolename LIKE #{paramEntity.rolename}
+        </if>
+        <if test="paramEntity.rolecode != null" >
+          AND  rolecode LIKE  #{paramEntity.rolecode}
+        </if>
+      </where>
+    </if>
+  </select>
+
+  <insert id="insert" parameterType="com.vcgo.Entity.VcSysRole" >
+    insert into VC_SYS_Role (ID, RoleName, Remark,
+    RoleCode, CreateDate, EditDate
+    )
+    values (#{id,jdbcType=INTEGER}, #{rolename,jdbcType=VARCHAR}, #{remark,jdbcType=VARCHAR},
+    #{rolecode,jdbcType=VARCHAR}, #{createdate,jdbcType=TIMESTAMP}, #{editdate,jdbcType=TIMESTAMP}
+    )
+  </insert>
+
+  <delete id="delete" parameterType="java.lang.Integer" >
+    delete from VC_SYS_Role
+    where ID = #{id,jdbcType=INTEGER}
+  </delete>
+
+  <update id="update" parameterType="com.vcgo.Entity.VcSysRole" >
+    update VC_SYS_Role
+    <set >
+      <if test="rolename != null" >
+        RoleName = #{rolename,jdbcType=VARCHAR},
+      </if>
+      <if test="remark != null" >
+        Remark = #{remark,jdbcType=VARCHAR},
+      </if>
+      <if test="rolecode != null" >
+        RoleCode = #{rolecode,jdbcType=VARCHAR},
+      </if>
+      <if test="createdate != null" >
+        CreateDate = #{createdate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="editdate != null" >
+        EditDate = #{editdate,jdbcType=TIMESTAMP},
+      </if>
+    </set>
+    where ID = #{id,jdbcType=INTEGER}
+  </update>
+
+  <select id="selectById" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
+    select
+    <include refid="Base_Column_List" />
+    from VC_SYS_Role
+    where ID = #{id,jdbcType=INTEGER}
+  </select>
+
+  <delete id="deleteRolePowerItems" parameterType="java.lang.Integer">
+    DELETE FROM VC_SYS_Role_PowerItem
+    WHERE Role_ID=#{id}
+  </delete>
+
+  <insert id="insertRolePowerItems" parameterType="java.util.Map">
+    INSERT INTO VC_SYS_Role_PowerItem(Role_ID,PowerItem_ID)
+    VALUES
+    <foreach collection="rolePowerItems" item="rolePowerItem" separator=",">
+      (#{roleId},#{rolePowerItem})
+    </foreach>
+  </insert>
+
+  <select id="selectRolePowerItems" parameterType="java.lang.Integer" resultMap="com.vcgo.Dao.VcSysPoweritemMapper.BaseResultMap">
+    SELECT p.* From VC_SYS_Role_PowerItem rp
+    LEFT JOIN VC_SYS_PowerItem p
+    ON  rp.PowerItem_ID=p.id
+    WHERE rp.Role_ID=#{roleid}
+  </select>
+
+  <select id="selectRolesPowerItems" parameterType="java.util.Map" resultMap="com.vcgo.Dao.VcSysPoweritemMapper.BaseResultMap">
+    SELECT p.* FROM VC_SYS_Role_PowerItem rp
+    JOIN VC_SYS_PowerItem p ON rp.PowerItem_ID=p.ID
+    WHERE rp.Role_ID IN (
+    <foreach collection="RoleIdList" item="RoleId" separator=",">
+      #{RoleId}
+    </foreach>)
+    AND ItemType=#{ItemType}
+    GROUP BY id
+  </select>
+</mapper>

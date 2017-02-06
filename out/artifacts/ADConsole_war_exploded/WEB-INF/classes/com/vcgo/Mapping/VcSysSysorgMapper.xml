@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.vcgo.Dao.VcSysSysorgMapper" >
+  <resultMap id="BaseResultMap" type="com.vcgo.Entity.VcSysSysorg" >
+    <id column="ID" property="id" jdbcType="INTEGER" />
+    <result column="ParentID" property="parentid" jdbcType="INTEGER" />
+    <result column="SysOrgName" property="sysorgname" jdbcType="VARCHAR" />
+    <result column="SysOrgType" property="sysorgtype" jdbcType="INTEGER" />
+    <result column="CreateDate" property="createdate" jdbcType="TIMESTAMP" />
+    <result column="EditDate" property="editdate" jdbcType="TIMESTAMP" />
+    <result column="Remark" property="remark" jdbcType="VARCHAR" />
+  </resultMap>
+  <sql id="Base_Column_List" >
+    ID, ParentID, SysOrgName, SysOrgType, CreateDate, EditDate, Remark
+  </sql>
+</mapper>

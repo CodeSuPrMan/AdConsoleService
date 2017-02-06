@@ -1,0 +1,113 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.vcgo.Dao.VcSysPoweritemMapper" >
+  <resultMap id="BaseResultMap" type="com.vcgo.Entity.VcSysPoweritem" >
+    <id column="ID" property="id" jdbcType="INTEGER" />
+    <result column="ParentID" property="parentid" jdbcType="INTEGER" />
+    <result column="ItemName" property="itemname" jdbcType="VARCHAR" />
+    <result column="ItemURL" property="itemurl" jdbcType="VARCHAR" />
+    <result column="ItemTag" property="itemtag" jdbcType="VARCHAR" />
+    <result column="IconsClass" property="iconsclass" jdbcType="VARCHAR" />
+    <result column="IconsOpen" property="iconsopen" jdbcType="VARCHAR" />
+    <result column="IconsClose" property="iconsclose" jdbcType="VARCHAR" />
+    <result column="CreateDate" property="createdate" jdbcType="TIMESTAMP" />
+    <result column="ItemType" property="itemtype" jdbcType="VARCHAR" />
+    <result column="EditDate" property="editdate" jdbcType="TIMESTAMP" />
+    <result column="Remark" property="remark" jdbcType="VARCHAR" />
+  </resultMap>
+  <sql id="Base_Column_List">
+  ID, ParentID, ItemName, ItemURL, ItemTag, IconsClass, IconsOpen, IconsClose, CreateDate,
+    ItemType, EditDate, Remark
+  </sql>
+
+  <select id="selectList" resultMap="BaseResultMap">
+      SELECT  <include refid="Base_Column_List"/>  from VC_SYS_PowerItem
+  </select>
+
+  <select id="selectPageList" resultMap="BaseResultMap" parameterType="com.vcgo.Entity.PageEntity">
+      SELECT <include refid="Base_Column_List"/>
+      FROM VC_SYS_PowerItem
+    where ParentID=0
+      ORDER  BY  #{orderField}
+      LIMIT #{start},#{pageSize}
+  </select>
+
+  <select id="selectCount" resultType="int" parameterType="com.vcgo.Entity.PageEntity">
+    SELECT  COUNT(1) FROM  VC_SYS_PowerItem
+  </select>
+
+  <insert id="insert" parameterType="com.vcgo.Entity.VcSysPoweritem" useGeneratedKeys="true" keyProperty="ID">
+    insert into VC_SYS_PowerItem(ParentID,ItemName,ItemURL,ItemTag,IconsClass,IconsOpen,IconsClose,CreateDate,ItemType)
+    VALUES (
+    #{parentid,jdbcType=VARCHAR},
+    #{itemname,jdbcType=VARCHAR}, #{itemurl,jdbcType=VARCHAR}, #{itemtag,jdbcType=VARCHAR},
+    #{iconsclass,jdbcType=VARCHAR}, #{iconsopen,jdbcType=VARCHAR}, #{iconsclose,jdbcType=VARCHAR},
+    #{createdate,jdbcType=TIMESTAMP}, #{itemtype,jdbcType=INTEGER}
+    )
+  </insert>
+
+  <update id="update" parameterType="com.vcgo.Entity.VcSysPoweritem" >
+    UPDATE
+    VC_SYS_PowerItem
+    <set>
+      <if test="parentid != null" >
+        ParentID = #{parentid,jdbcType=INTEGER},
+      </if>
+      <if test="itemname != null" >
+        ItemName = #{itemname,jdbcType=VARCHAR},
+      </if>
+      <if test="itemurl != null" >
+        ItemURL = #{itemurl,jdbcType=VARCHAR},
+      </if>
+      <if test="itemtag != null" >
+        ItemTag = #{itemtag,jdbcType=VARCHAR},
+      </if>
+      <if test="iconsclass != null" >
+        IconsClass = #{iconsclass,jdbcType=VARCHAR},
+      </if>
+      <if test="iconsopen != null" >
+        IconsOpen = #{iconsopen,jdbcType=VARCHAR},
+      </if>
+      <if test="iconsclose != null" >
+        IconsClose = #{iconsclose,jdbcType=VARCHAR},
+      </if>
+      <if test="createdate != null" >
+        CreateDate = #{createdate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="itemtype != null" >
+        ItemType = #{itemtype,jdbcType=INTEGER},
+      </if>
+      <if test="editdate != null" >
+        EditDate = #{editdate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="remark != null" >
+        Remark = #{remark,jdbcType=VARCHAR},
+      </if>
+    </set>
+    where ID = #{id,jdbcType=INTEGER}
+  </update>
+
+  <select id="selectByWhere" parameterType="com.vcgo.Entity.VcSysPoweritem" resultMap="BaseResultMap">
+    SELECT <include refid="Base_Column_List"/> from VC_SYS_PowerItem
+    WHERE
+    1=1
+    <if test="id!=null">
+     AND  id=#{id}
+   </if>
+    <if test="parentid!=null">
+      AND  parentid=#{parentid}
+    </if>
+  </select>
+
+  <delete id="delete" parameterType="java.lang.Integer">
+      delete from VC_SYS_PowerItem
+    where ID = #{id,jdbcType=INTEGER}
+  </delete>
+
+  <select id="selectById" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
+    select
+    <include refid="Base_Column_List" />
+    from VC_SYS_PowerItem
+    where ID = #{id,jdbcType=INTEGER}
+  </select>
+</mapper>
